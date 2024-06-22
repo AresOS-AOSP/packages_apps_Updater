@@ -58,17 +58,6 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/fullChangelog"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:text="@string/menu_show_changelog"
-                    android:textAllCaps="false"
-                    android:textAppearance="?android:attr/textAppearanceListItemSecondary"
-                    android:textColor="?android:attr/colorAccent" />
             </LinearLayout>
         </LinearLayout>
 
