@@ -42,11 +42,9 @@ import com.rising.updater.misc.BuildInfoUtils;
 import com.rising.updater.misc.Constants;
 import com.rising.updater.misc.StringGenerator;
 import com.rising.updater.misc.Utils;
-import com.rising.updater.model.Update;
 import com.rising.updater.model.UpdateInfo;
 import com.rising.updater.model.UpdateStatus;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -125,10 +123,8 @@ public class UpdaterService extends Service {
                     setNotificationTitle(update);
                     handleInstallProgress(update);
                 } else if (UpdaterController.ACTION_UPDATE_REMOVED.equals(intent.getAction())) {
-                    final boolean isLocalUpdate = Update.LOCAL_ID.equals(downloadId);
                     Bundle extras = mNotificationBuilder.getExtras();
-                    if (extras != null && !isLocalUpdate && downloadId.equals(
-                            extras.getString(UpdaterController.EXTRA_DOWNLOAD_ID))) {
+                    if (downloadId.equals(extras.getString(UpdaterController.EXTRA_DOWNLOAD_ID))) {
                         mNotificationBuilder.setExtras(null);
                         UpdateInfo update = mUpdaterController.getUpdate(downloadId);
                         if (update != null && update.getStatus() != UpdateStatus.INSTALLED) {
@@ -422,13 +418,10 @@ public class UpdaterService extends Service {
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
                 boolean deleteUpdate = Utils.isDeleteUpdatesForceEnabled(this) ? true
                         : pref.getBoolean(Constants.PREF_AUTO_DELETE_UPDATES, true);
-                boolean isLocal = Update.LOCAL_ID.equals(update.getDownloadId());
-                // Mark updates for deletion after reboot
-                if (deleteUpdate || isLocal) {
-                    mUpdaterController.markUpdateForDeletionAfterReboot(update.getDownloadId());
+                if (deleteUpdate) {
+                    mUpdaterController.deleteUpdate(update.getDownloadId());
                 }
 
-                sendBroadcast(new Intent(UpdaterController.ACTION_UPDATE_STATUS).putExtra(UpdaterController.EXTRA_DOWNLOAD_ID, update.getDownloadId()));
                 tryStopSelf();
                 break;
             }

@@ -18,18 +18,15 @@ package com.rising.updater.controller;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.rising.updater.UpdatesDbHelper;
 import com.rising.updater.download.DownloadClient;
-import com.rising.updater.misc.Constants;
 import com.rising.updater.misc.Utils;
 import com.rising.updater.model.Update;
 import com.rising.updater.model.UpdateInfo;
@@ -69,7 +66,7 @@ public class UpdaterController {
     private int mActiveDownloads = 0;
     private final Set<String> mVerifyingUpdates = new HashSet<>();
 
-    public static synchronized UpdaterController getInstance(Context context) {
+    protected static synchronized UpdaterController getInstance(Context context) {
         if (sUpdaterController == null) {
             sUpdaterController = new UpdaterController(context);
         }
@@ -333,7 +330,7 @@ public class UpdaterController {
         return addUpdate(update, true);
     }
 
-    public boolean addUpdate(final UpdateInfo updateInfo, boolean availableOnline) {
+    private boolean addUpdate(final UpdateInfo updateInfo, boolean availableOnline) {
         Log.d(TAG, "Adding download: " + updateInfo.getDownloadId());
         if (mDownloads.containsKey(updateInfo.getDownloadId())) {
             Log.d(TAG, "Download (" + updateInfo.getDownloadId() + ") already added");
@@ -473,7 +470,7 @@ public class UpdaterController {
     }
 
     public void deleteUpdate(String downloadId) {
-        Log.d(TAG, "Deleting update: " + downloadId);
+        Log.d(TAG, "Cancelling " + downloadId);
         if (!mDownloads.containsKey(downloadId) || isDownloading(downloadId)) {
             return;
         }
@@ -485,8 +482,7 @@ public class UpdaterController {
             update.setPersistentStatus(UpdateStatus.Persistent.UNKNOWN);
             deleteUpdateAsync(update);
 
-            final boolean isLocalUpdate = Update.LOCAL_ID.equals(downloadId);
-            if (!isLocalUpdate && !update.getAvailableOnline()) {
+            if (!update.getAvailableOnline()) {
                 Log.d(TAG, "Download no longer available online, removing");
                 mDownloads.remove(downloadId);
                 notifyUpdateDelete(downloadId);
@@ -494,22 +490,6 @@ public class UpdaterController {
                 notifyUpdateChange(downloadId);
             }
         }
-    }
-
-    public void markUpdateForDeletionAfterReboot(String downloadId) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        Set<String> updatesToDelete = prefs.getStringSet(Constants.PREF_UPDATES_TO_DELETE, new HashSet<>());
-        updatesToDelete.add(downloadId);
-        prefs.edit().putStringSet(Constants.PREF_UPDATES_TO_DELETE, updatesToDelete).apply();
-    }
-
-    public void checkForPendingDeletions() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        Set<String> updatesToDelete = prefs.getStringSet(Constants.PREF_UPDATES_TO_DELETE, new HashSet<>());
-        for (String downloadId : updatesToDelete) {
-            deleteUpdate(downloadId);
-        }
-        prefs.edit().remove(Constants.PREF_UPDATES_TO_DELETE).apply();
     }
 
     public List<UpdateInfo> getUpdates() {
