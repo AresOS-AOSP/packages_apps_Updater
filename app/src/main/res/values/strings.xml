@@ -26,7 +26,7 @@
          The path is relative to the root of the external storage.-->
     <string name="export_path" translatable="false">LineageOS updates/</string>
 
-    <string name="updater_server_url" translatable="false">https://raw.githubusercontent.com/xagaproject/OTA/14-AresOS_1/xaga_{timestamp}.json</string>
+    <string name="updater_server_url" translatable="false">https://raw.githubusercontent.com/XagaForge/releases/14-AresOS/xaga_{timestamp}.json</string>
 
     <string name="verification_failed_notification">Verification failed</string>
     <string name="verifying_download_notification">Verifying update</string>
