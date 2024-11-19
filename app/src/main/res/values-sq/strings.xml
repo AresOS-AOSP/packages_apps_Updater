@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2017-2023 The LineageOS Project
+     Copyright (C) 2017-2024 The LineageOS Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
     <string name="installation_suspended_notification">Instalimi u pezullua</string>
     <string name="new_updates_found_title">Përditësime të reja</string>
     <string name="text_download_speed">%1$s, %2$s/s</string>
-    <string name="pause_button">Pusho</string>
+    <string name="pause_button">Ndalo</string>
     <string name="resume_button">Rinis</string>
     <string name="suspend_button">Pezullu</string>
     <string name="installing_update">Duke instaluar paketën e përditësimit</string>
@@ -39,6 +39,11 @@
     <string name="dialog_prepare_zip_message">Parapërgatitje për përditësimin</string>
     <string name="dialog_battery_low_title">Bateria e ulët</string>
     <string name="dialog_battery_low_message_pct">Niveli i baterië është shumë i ulët, për të vazhduar duhet të jetë të paktën <xliff:g id="percent_discharging">%1$d</xliff:g>%% e baterisë, ose <xliff:g id="percent_charging">%2$d</xliff:g>%% nëse po karikohet.</string>
+    <string name="dialog_scratch_mounted_message"><![CDATA[Ju lutemi ekzekutoni komandat e mëposhtme dhe riprovoni përditësimin:\n
+         • rrënjë adb\n
+         • adb enable-verity\n
+         • rindezje adb]]></string>
+    <string name="dialog_scratch_mounted_title">Përditësimi nuk mund të instalohet me OverlayFS të montuar</string>
     <string name="reboot">Rindiz</string>
     <string name="menu_refresh">Rifresko</string>
     <string name="menu_preferences">Preferencat</string>
